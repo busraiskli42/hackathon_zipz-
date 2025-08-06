@@ -1,0 +1,375 @@
+/* Genel Ayarlar ve Sayfa Yapısı */
+
+body {
+    margin: 0;
+    font-family: 'Nunito', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #FFC080 0%, #a3e293 100%);
+    color: #2C3E50;
+}
+
+.main-container {
+    width: 100%;
+    max-width: 1200px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    box-sizing: border-box;
+    position: relative;
+}
+
+/* Ebeveyn Ayarları */
+.parent-settings {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    color: #666;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.settings-icon {
+    width: 40px;
+    height: 40px;
+    margin-bottom: 5px;
+}
+
+/* Başlık Stili */
+.main-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 3.2em;
+    color: #2C3E50;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Ana İçerik Alanı: Sol ve Sağ Sütunlar */
+.main-content-area {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.left-side {
+    flex: 0 0 50%;
+    max-width: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.right-side {
+    flex: 0 0 50%;
+    max-width: 50%;
+    /* Burası yeni eklenen veya güncellenen kısım */
+    display: flex;
+    justify-content: center; /* İçeriği yatayda ortala */
+    align-items: center; /* İçeriği dikeyde ortala */
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+
+
+/* Kayma sorununu çözen kapsayıcı */
+.start-content-wrapper {
+    display: flex;
+    flex-direction: column; /* Dikey sıralama */
+    align-items: center;    /* Yatayda ortalar */
+    justify-content: center; /* Dikeyde ortalar */
+    min-height: 300px;
+    width: 100%;
+    box-sizing: border-box; /* Padding ve border'ın genişliğe dahil olmasını sağlar */
+    padding: 50px; /* Kenarlardan boşluk bırakmak isteyebilirsiniz */
+}
+
+/* Robot Stilleri */
+.robots-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.robot-image {
+    width: 500px;
+    height: auto;
+}
+
+/* Başla Butonu */
+.start-button {
+    background-color: #FF6347;
+    color: white;
+    font-family: 'Fredoka One', cursive;
+    font-size: 2.5em;
+    padding: 20px 60px;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    margin-right: -260px;
+ 
+}
+
+.start-button:hover {
+    background-color: #FF9800;
+    transform: translateY(-3px);
+}
+
+/* Modül Butonları Konteyneri */
+.module-buttons-container {
+    /* display: none; */ /* Bu satırı sildiğinizden emin olun */
+    display: flex; /* Script ile 'visible' eklendiğinde devreye girecek */
+    justify-content: center;
+    gap: 40px;
+    width: 100%; /* Konteynerin genişliğini ayarlar */
+    flex-wrap: wrap;
+}
+
+/* Modül Kartı Stilleri */
+.module-card, a.module-card {
+    background-color: #DEDEDE;
+    border-radius: 20px;
+    padding: 30px 20px;
+    width: 200px;
+    height: 220px; /* Kartları eşit yükseklikte yapmak için */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; /* İkon ve metni dikeyde ortalar */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    text-decoration: none;
+    color: #2C3E50;
+}
+
+.module-card:hover, a.module-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+}
+
+.module-icon {
+    width: 150px;
+    height: 150px;
+    margin-bottom: 10px;
+    align-items: center;
+}
+
+.module-text {
+    font-family: 'Nunito', sans-serif;
+    font-size: 1.5em;
+    color: #2C3E50;
+    font-weight: 700;
+    text-align: center;
+    line-height: 1.4;
+}
+
+/* Gizli/Görünür Elemanlar */
+.hidden {
+    display: none;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.visible {
+    display: flex;
+    opacity: 1;
+}
+
+/* Geri Butonu */
+.back-button {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    
+    border-radius: 10%;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+    text-decoration: none;
+}
+
+.back-button:hover {
+    transform: scale(1.1);
+}
+.back-button img {
+    /* İkon resminin boyutunu, butonun boyutuna göre ayarladım */
+    width: 100%;
+    height: 100%;
+}
+.back-icon {
+    font-size: 1.5em;
+    color: #4682b4;
+}
+
+/* Küçük ekranlar için responsive ayarlar */
+@media (max-width: 768px) {
+    .main-title {
+        font-size: 2.5em;
+    }
+    .main-content-area {
+        display: flex;
+        justify-content: center; /* Zaten ortalıyordu */
+        align-items: center;
+        width: 100%; /* Emin olmak için */
+        gap: 40px;
+    }
+    .left-side, .right-side {
+        width: 100%;
+    }
+    .robot-image {
+        width: 200px;
+    }
+    .start-button {
+        font-size: 1.8em;
+        padding: 15px 40px;
+    }
+    .module-card {
+        width: 200px;
+        height: 200px;
+        padding: 20px 15px;
+    }
+    .module-icon {
+        width: 80px;
+        height: 80px;
+
+    }
+    .module-text {
+        font-size: 1.2em;
+    }
+    .parent-settings {
+        top: 10px;
+        right: 10px;
+        font-size: 12px;
+    }
+    .settings-icon {
+        width: 25px;
+        height: 25px;
+    }
+}
+.game-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+    padding: 20px;
+    width: 100%;
+    max-width: 800px;
+}
+
+.scenario-text {
+    font-family: 'Nunito', sans-serif;
+    font-size: 2em;
+    color: #2C3E50;
+    text-align: center;
+    margin-bottom: 30px;
+    line-height: 1.5;
+}
+
+.options-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    width: 100%;
+}
+
+.option-card {
+    background-color: #DEDEDE;
+    border-radius: 20px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.option-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+}
+
+.option-card.correct {
+    border: 4px solid #4CAF50;
+}
+
+.option-card.incorrect {
+    border: 4px solid #FF6347;
+    animation: shake 0.5s;
+}
+
+.option-text {
+    font-family: 'Nunito', sans-serif;
+    font-size: 1.5em;
+    font-weight: 700;
+    color: #2C3E50;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.feedback-message {
+    font-family: 'Nunito', sans-serif;
+    font-size: 2em;
+    font-weight: 700;
+    text-align: center;
+    min-height: 50px;
+    margin-top: 20px;
+}
+
+.feedback-message.correct {
+    color: #4CAF50;
+}
+
+.feedback-message.incorrect {
+    color: #FF6347;
+}
+
+@keyframes shake {
+    0% { transform: translateX(0); }
+    20% { transform: translateX(-10px); }
+    40% { transform: translateX(10px); }
+    60% { transform: translateX(-10px); }
+    80% { transform: translateX(10px); }
+    100% { transform: translateX(0); }
+}
+
+.next-button {
+    padding: 15px 30px;
+    font-size: 1.5em;
+    font-weight: 700;
+    color: #fff;
+    background-color: #3498DB;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    margin-top: 20px;
+    font-family: 'Nunito', sans-serif;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.next-button:hover {
+    background-color: #2980B9;
+    transform: translateY(-2px);
+}

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ebeveyn Kayıt Ol</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Genel Stil Ayarları */
+        body {
+            font-family: 'Nunito', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #FFC080 0%, #a3e293 100%); /* Arka plan gradyanı */
+            margin: 0;
+            color: #2C3E50; /* Genel metin rengi */
+        }
+        .main-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            width: 100%;
+            max-width: 500px; /* Konteyner genişliği */
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        /* Geri Butonu Stilleri */
+        .back-button {
+            position: fixed; /* Ekranın sol üst köşesine sabitlendi */
+            top: 20px;
+            left: 20px;
+            width: 60px; /* Buton boyutu */
+            height: 60px; /* Buton boyutu */
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-decoration: none;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+            z-index: 1000;
+        }
+        .back-button:hover {
+            transform: scale(1.1);
+        }
+        .back-button img {
+            width: 60px; /* Butonun boyutuna göre ayarlandı */
+            height: 60px; /* Butonun boyutuna göre ayarlandı */
+        }
+        .register-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            padding: 40px;
+            background-color: rgba(255, 255, 255, 0.9); /* Hafif şeffaf beyaz arka plan */
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px; /* Kayıt formu konteyner genişliği */
+            box-sizing: border-box;
+        }
+        .register-container h1 {
+            font-family: 'Fredoka One', cursive;
+            font-size: 2.5em;
+            color: #2C3E50;
+            margin-bottom: 20px;
+        }
+        .register-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
+            max-width: 300px;
+        }
+        .register-form input {
+            padding: 15px;
+            border-radius: 10px;
+            border: 2px solid #DEDEDE;
+            font-family: 'Nunito', sans-serif;
+            font-size: 1.1em;
+            width: calc(100% - 30px); /* Padding'i hesaba kat */
+            box-sizing: border-box;
+        }
+        .register-form input:focus {
+            outline: none;
+            border-color: #a3e293; /* Odaklandığında renk değişimi */
+        }
+        .register-form button {
+            padding: 15px;
+            background-color: #2C3E50;
+            color: white;
+            font-family: 'Fredoka One', cursive;
+            font-size: 1.2em;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .register-form button:hover {
+            background-color: #1a242f;
+            transform: translateY(-2px);
+        }
+        .success-message {
+            color: #27AE60; /* Yeşil */
+            font-family: 'Nunito', sans-serif;
+            font-weight: 700;
+            text-align: center;
+            margin-top: 10px;
+        }
+        .error-message {
+            color: #FF6347; /* Kırmızı */
+            font-family: 'Nunito', sans-serif;
+            font-weight: 700;
+            text-align: center;
+            margin-top: 10px;
+        }
+        .login-link {
+            font-family: 'Nunito', sans-serif;
+            font-size: 1em;
+            color: #2C3E50;
+            text-decoration: none;
+            margin-top: 10px;
+        }
+        .login-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive Ayarlar */
+        @media (max-width: 768px) {
+            .main-container {
+                padding: 15px;
+            }
+            .register-container {
+                padding: 30px;
+            }
+            .register-container h1 {
+                font-size: 2em;
+            }
+            .register-form input {
+                font-size: 1em;
+                padding: 12px;
+            }
+            .register-form button {
+                font-size: 1.1em;
+                padding: 12px;
+            }
+            .back-button {
+                width: 40px;
+                height: 40px;
+                top: 15px;
+                left: 15px;
+            }
+            .back-button img {
+                width: 40px;
+                height: 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <a href="index.html" class="back-button">
+            <img src="assets/back_icon.png" alt="Geri Dön" class="back-icon">
+        </a>
+        <div class="register-container">
+            <h1>Kayıt Ol</h1>
+            <form id="registerForm" class="register-form" action="/register" method="POST">
+                <input type="text" name="username" placeholder="Kullanıcı Adı" required>
+                <input type="email" name="email" placeholder="E-posta" required>
+                <input type="password" name="password" placeholder="Şifre" required>
+                <input type="password" name="confirm_password" placeholder="Şifre (Tekrar)" required>
+                <button type="submit">Kayıt Ol</button>
+            </form>
+            <p id="message" class=""></p>
+            <a href="index.html" class="login-link">Zaten bir hesabın var mı? Giriş yap!</a>
+        </div>
+    </div>
+    <script>
+        document.getElementById('registerForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Formun varsayılan gönderimini engelle
+
+            const password = document.querySelector('input[name="password"]').value;
+            const confirmPassword = document.querySelector('input[name="confirm_password"]').value;
+            const messageElement = document.getElementById('message');
+
+            // Önceki mesaj ve sınıfı temizle
+            messageElement.textContent = "";
+            messageElement.className = "";
+
+            if (password !== confirmPassword) {
+                messageElement.textContent = "Şifreler uyuşmuyor.";
+                messageElement.className = "error-message";
+            } else {
+                // Şifreler eşleşiyorsa başarılı mesajı göster ve ana sayfaya yönlendir
+                messageElement.textContent = "Kayıt işlemi başarılı! Ana sayfaya yönlendiriliyorsunuz...";
+                messageElement.className = "success-message";
+                
+                // 1.5 saniye sonra index.html sayfasına yönlendir
+                setTimeout(() => {
+                    window.location.href = 'index.html'; 
+                }, 1500); 
+            }
+        });
+        
+        // URL parametrelerinden gelen mesajları işleme (bu kısım artık client-side yönlendirme ile daha az önemli)
+        const urlParams = new URLSearchParams(window.location.search);
+        const status = urlParams.get('status');
+        const messageElement = document.getElementById('message'); // Tekrar tanımla
+
+        if (status === 'success') {
+            messageElement.textContent = "Kayıt işlemi başarılı! Giriş yapabilirsiniz.";
+            messageElement.className = "success-message";
+        } else if (status === 'error') {
+            messageElement.textContent = "Kayıt işlemi başarısız. Lütfen tekrar deneyin.";
+            messageElement.className = "error-message";
+        }
+    </script>
+</body>
+</html>

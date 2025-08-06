@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Çözüm Yolu</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Genel Stil Ayarları (style.css'ten alınmış olabilir, burada tekrar tanımlandı) */
+        :root {
+            --card-bg-color: #DEDEDE;
+            --text-color-dark: #2C3E50;
+            --main-bg-gradient: linear-gradient(135deg, #FFC080 0%, #a3e293 100%);
+            --card-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            --card-hover-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: var(--main-bg-gradient);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            color: var(--text-color-dark);
+        }
+
+        .main-container {
+            width: 100%;
+            max-width: 1200px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+            box-sizing: border-box;
+            position: relative; /* İçerideki absolute konumlandırılmış buton için gerekli */
+        }
+
+        /* Geri Butonu Stilleri (Diğer sayfalarla tutarlı hale getirildi) */
+        .back-button {
+            position: fixed; /* Ekranın sol üst köşesine sabitlendi */
+            top: 20px;
+            left: 20px;
+            width: 60px; /* Buton boyutu diğer sayfalarla tutarlı hale getirildi */
+            height: 60px; /* Buton boyutu diğer sayfalarla tutarlı hale getirildi */
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-decoration: none;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+            z-index: 1000; /* Diğer elemanların üzerinde görünmesini sağlar */
+        }
+
+        .back-button:hover {
+            transform: scale(1.1);
+        }
+        
+        .back-button img {
+            width: 60px; /* Butonun boyutuna göre ayarlandı */
+            height: 60px; /* Butonun boyutuna göre ayarlandı */
+        }
+
+        /* Başlık Stili */
+        .main-title {
+            font-family: 'Fredoka One', cursive;
+            font-size: 3.2em;
+            color: #2C3E50;
+            text-align: center;
+            margin-bottom: 20px; /* Boşluk azaltıldı */
+        }
+
+        /* Bu sayfa için özel stiller */
+        .game-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 25px; /* Boşluk azaltıldı */
+            padding: 20px;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        #task-card-title {
+            font-family: 'Fredoka One', cursive;
+            font-size: 3.5em;
+            color: #2C3E50;
+            text-align: center;
+            margin-bottom: 20px;
+            min-height: 80px; /* Başlık için sabit bir yükseklik ekledik */
+        }
+        
+        #step-text {
+            font-family: 'Nunito', sans-serif;
+            font-size: 2em;
+            font-weight: 700;
+            color: #2C3E50;
+            text-align: center;
+            min-height: 50px;
+            line-height: 1.5;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* İki sütun oluşturur */
+            gap: 20px;
+            width: 100%;
+        }
+
+        .option-card {
+            background-color: var(--card-bg-color);
+            border-radius: 20px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .option-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .option-card.correct {
+            border: 4px solid #4CAF50;
+        }
+
+        .option-card.incorrect {
+            border: 4px solid #FF6347;
+            animation: shake 0.5s;
+        }
+        
+        .option-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 15px;
+        }
+        
+        .feedback-message {
+            font-family: 'Nunito', sans-serif;
+            font-size: 2em;
+            font-weight: 700;
+            text-align: center;
+            min-height: 50px;
+            margin-top: 20px;
+        }
+
+        .feedback-message.correct {
+            color: #4CAF50;
+        }
+
+        .feedback-message.incorrect {
+            color: #FF6347;
+        }
+
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            20% { transform: translateX(-10px); }
+            40% { transform: translateX(10px); }
+            60% { transform: translateX(-10px); }
+            80% { transform: translateX(10px); }
+            100% { transform: translateX(0); }
+        }
+        /* Responsive Ayarlar */
+        @media (max-width: 768px) {
+            .main-title {
+                font-size: 2.5em;
+            }
+            #task-card-title {
+                font-size: 2.5em;
+            }
+            #step-text {
+                font-size: 1.5em;
+            }
+            .options-grid {
+                grid-template-columns: 1fr; /* Küçük ekranlarda tek sütun */
+            }
+            .back-button {
+                width: 40px;
+                height: 40px;
+                top: 15px;
+                left: 15px;
+            }
+            .back-button img {
+                width: 40px;
+                height: 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <a href="problemcozme.html" class="back-button">
+            <img src="assets/back_icon.png" alt="Geri Dön" class="back-icon">
+        </a>
+        <h1 class="main-title">Çözüm Yolu</h1>
+
+        <div id="game-screen" class="game-container">
+            <h2 id="task-card-title"></h2>
+            <div id="step-text"></div>
+            <div id="options-grid" class="options-grid"></div>
+            <div id="feedback-message" class="feedback-message"></div>
+        </div>
+    </div>
+    <script>
+        const tasksWithSteps = [
+            {
+                id: 1,
+                title: "Ellerini Yıka",
+                steps: [
+                    { text: "Musluğu aç.", options: ["assets/suac.png", "assets/sabun.png", "assets/kuru.png", "assets/köpük.png"], correctImage: "assets/suac.png" },
+                    { text: "Sabun al.", options: ["assets/köpük.png", "assets/sabun.png", "assets/suac.png", "assets/yıka.png"], correctImage: "assets/sabun.png" },
+                    { text: "Ellerini köpürt.", options: ["assets/yıka.png", "assets/kuru.png", "assets/köpük.png", "assets/sabun.png"], correctImage: "assets/köpük.png" },
+                    { text: "Ellerini durula.", options: ["assets/suac.png", "assets/yıka.png", "assets/kuru.png", "assets/köpük.png"], correctImage: "assets/yıka.png" },
+                    { text: "Ellerini kurut.", options: ["assets/kuru.png", "assets/sabun.png", "assets/yıka.png", "assets/suac.png"], correctImage: "assets/kuru.png" }
+                ]
+            },
+            {
+                id: 2,
+                title: "Dişlerini Fırçala",
+                steps: [
+                    { text: "Musluğu aç ve fırçayı ıslat.", options: ["assets/macun_koy.png", "assets/firca_islat.png", "assets/agiz_calkala.png", "assets/dis_fircala.png"], correctImage: "assets/firca_islat.png" },
+                    { text: "Macun koy.", options: ["assets/dis_fircala.png", "assets/musluk_kapa.png", "assets/macun_koy.png", "assets/agiz_calkala.png"], correctImage: "assets/macun_koy.png" },
+                    { text: "Dişlerini fırçala.", options: ["assets/macun_koy.png", "assets/firca_islat.png", "assets/dis_fircala.png", "assets/agiz_calkala.png"], correctImage: "assets/dis_fircala.png" },
+                    { text: "Ağzını çalkala.", options: ["assets/musluk_kapa.png", "assets/dis_fircala.png", "assets/agiz_calkala.png", "assets/firca_islat.png"], correctImage: "assets/agiz_calkala.png" },
+                    { text: "Diş fırçanı yıka.", options: ["assets/dis_fircala.png", "assets/musluk_kapa.png", "assets/agiz_calkala.png", "assets/macun_koy.png"], correctImage: "assets/musluk_kapa.png" }
+                ]
+            }
+        ];
+        
+        let currentTaskIndex = 0;
+        let currentStepIndex = 0;
+        let optionsLocked = false;
+        const taskCardTitle = document.getElementById('task-card-title');
+        const stepText = document.getElementById('step-text');
+        const optionsGrid = document.getElementById('options-grid');
+        const feedbackMessage = document.getElementById('feedback-message');
+        
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+        
+        function loadStep() {
+            optionsLocked = false;
+            
+            if (currentTaskIndex >= tasksWithSteps.length) {
+                taskCardTitle.textContent = "Tebrikler! Tüm görevleri tamamladın.";
+                stepText.textContent = "Geri dönmek için yukarıdaki oka tıklayabilirsin.";
+                optionsGrid.innerHTML = '';
+                feedbackMessage.textContent = '';
+                return;
+            }
+
+            const currentTask = tasksWithSteps[currentTaskIndex];
+            
+            if (currentStepIndex >= currentTask.steps.length) {
+                currentTaskIndex++;
+                currentStepIndex = 0;
+                loadStep();
+                return;
+            }
+            
+            const currentStep = currentTask.steps[currentStepIndex];
+            
+            taskCardTitle.textContent = currentTask.title;
+            stepText.textContent = currentStep.text;
+            optionsGrid.innerHTML = '';
+            feedbackMessage.textContent = '';
+            feedbackMessage.className = 'feedback-message';
+            
+            shuffle(currentStep.options);
+            
+            currentStep.options.forEach(optionImage => {
+                const optionCard = document.createElement('div');
+                optionCard.className = 'option-card';
+                optionCard.innerHTML = `<img src="${optionImage}" alt="Seçenek" class="option-image">`;
+                optionCard.addEventListener('click', () => handleOptionClick(optionCard, optionImage, currentStep.correctImage));
+                optionsGrid.appendChild(optionCard);
+            });
+        }
+        
+        function handleOptionClick(card, selectedImage, correctImage) {
+            if (optionsLocked) return;
+
+            // Önceki geri bildirim sınıflarını temizle
+            feedbackMessage.classList.remove('correct', 'incorrect');
+            Array.from(optionsGrid.children).forEach(item => {
+                item.classList.remove('correct', 'incorrect');
+                item.classList.remove('shake'); // Animasyon sınıfını da kaldır
+            });
+
+            if (selectedImage === correctImage) {
+                optionsLocked = true;
+                card.classList.add('correct');
+                feedbackMessage.textContent = "Harika! Doğru adım.";
+                feedbackMessage.classList.add('correct');
+                setTimeout(() => {
+                    currentStepIndex++;
+                    loadStep();
+                }, 1000);
+            } else {
+                card.classList.add('incorrect');
+                feedbackMessage.textContent = "Hımm, yanlış adım. Tekrar dene.";
+                feedbackMessage.classList.add('incorrect');
+                card.addEventListener('animationend', () => {
+                    card.classList.remove('incorrect');
+                }, { once: true });
+            }
+        }
+        
+        window.onload = loadStep;
+    </script>
+</body>
+</html>

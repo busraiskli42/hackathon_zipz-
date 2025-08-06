@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zuzu ile Düşün</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        .login-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            padding: 40px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .login-container h1 {
+            font-family: 'Fredoka One', cursive;
+            font-size: 2.5em;
+            color: #2C3E50;
+        }
+
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .login-form input {
+            padding: 15px;
+            border-radius: 10px;
+            border: 2px solid #DEDEDE;
+            font-family: 'Nunito', sans-serif;
+            font-size: 1.1em;
+        }
+
+        .login-form button {
+            padding: 15px;
+            background-color: #2C3E50;
+            color: white;
+            font-family: 'Fredoka One', cursive;
+            font-size: 1.2em;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .login-form button:hover {
+            background-color: #1a242f;
+        }
+
+        .register-button {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 12px 20px;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            font-family: 'Fredoka One', cursive;
+            font-size: 1em;
+            border-radius: 10px;
+            transition: background-color 0.3s;
+            text-align: center;
+        }
+
+        .register-button:hover {
+            background-color: #2980b9;
+        }
+
+        .error-message {
+            color: #FF6347;
+            font-family: 'Nunito', sans-serif;
+            font-weight: 700;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+
+        <h1 class="main-title">Zuzu ile Düşün Zıpzıp ile Çöz</h1>
+
+        <div class="main-content-area">
+            <div class="left-side">
+                <div class="robots-container">
+                    <img src="assets/zipzip.png" alt="Zıpzıp Robot" class="robot-image zipzip">
+                </div>
+            </div>
+
+            <div class="right-side">
+                <div id="start-screen" class="start-content-wrapper">
+                    <button id="startButton" class="start-button">Başla</button>
+                </div>
+                
+                <div id="login-screen" class="login-container hidden">
+                    <h1>Giriş Yap</h1>
+                    <form id="loginForm" class="login-form" action="/login" method="POST">
+                        <input type="text" name="username" placeholder="Kullanıcı Adı" required>
+                        <input type="password" name="password" placeholder="Şifre" required>
+                        <button type="submit">Giriş Yap</button>
+                    </form>
+                    <a href="kayit.html" class="register-button">Hesabın yok mu? Kayıt ol</a>
+                    <p id="errorMessage" class="error-message"></p>
+                </div>
+                
+                <div id="moduleButtonsContainer" class="module-buttons-container hidden">
+                
+                    
+                  
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

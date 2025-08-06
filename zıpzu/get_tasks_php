@@ -1,0 +1,20 @@
+<?php
+include 'db.php';
+
+header('Content-Type: application/json');
+
+$sql = "SELECT id, title, is_completed FROM tasks";
+$result = $conn->query($sql);
+
+$tasks = array();
+if ($result->num_rows > 0) {
+    while($row = $result->fetch_assoc()) {
+        $row['is_completed'] = (bool)$row['is_completed']; // Veritabanı değerini booleana çevir
+        $tasks[] = $row;
+    }
+}
+
+echo json_encode($tasks);
+
+$conn->close();
+?>

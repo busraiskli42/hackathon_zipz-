@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zuzu - Basit Cümle Kurma</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* CSS kodları */
+        :root {
+            
+            --secondary-bg-color: #ffffff;
+            --text-color-dark: #333;
+            --text-color-light: #fff;
+            --correct-color: #4CAF50;
+            --incorrect-color: #f44336;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            /* Arka plan gradyanı buraya eklendi */
+            background: linear-gradient(135deg, #FFC080 0%, #a3e293 100%);
+            background-blend-mode: multiply;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .main-container {
+            /* main-container'ın arka planı şeffaf hale getirildi */
+            background-color: transparent; 
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 800px;
+            width: 100%;
+        }
+
+        .back-button {
+            position: absolute;
+            top: 30px;
+            left: 20px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-decoration: none;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .back-button img {
+            width: 60px;
+            height: 60px;
+        }
+
+        .main-title {
+            font-family: 'Fredoka One', cursive;
+            font-size: 2.5rem;
+            color: var(--text-color-dark);
+            margin-bottom: 30px;
+        }
+
+        .lesson-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .sentence-display-container {
+            background-color: var(--secondary-bg-color);
+            padding: 20px 40px;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .sentence-text {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-color-dark);
+            margin: 0;
+        }
+
+        .image-gallery-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .gallery-item {
+            background-color: var(--secondary-bg-color);
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            /* Kart boyutları büyütüldü */
+            width: 220px;
+            height: 220px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .gallery-item.correct {
+            border: 5px solid var(--correct-color);
+        }
+
+        .gallery-item.incorrect {
+            border: 5px solid var(--incorrect-color);
+        }
+
+        .gallery-item p {
+            margin-top: 10px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-color-dark);
+        }
+
+        .next-button {
+            background-color: #ff9800;
+            color: var(--text-color-light);
+            border: none;
+            padding: 15px 40px;
+            border-radius: 30px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+
+        .next-button:hover {
+            background-color: #e68900;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <!-- Geri butonu -->
+        <a href="iletisim.html" class="back-button">
+            <img src="assets/back_icon.png" alt="Geri Dön" class="back-icon">
+        </a>
+        <h1 class="main-title">Basit Cümle Kurma</h1>
+        
+        <div class="lesson-container">
+            <div class="sentence-display-container">
+                <p id="currentSentence" class="sentence-text">Yükleniyor...</p>
+            </div>
+
+            <div id="imageGallery" class="image-gallery-container">
+                <!-- Resimler buraya JavaScript ile eklenecek -->
+            </div>
+
+            <button id="nextButton" class="next-button" style="display: none;">Sonraki</button>
+        </div>
+    </div>
+
+    <script>
+        // Ders verileri JavaScript içinde tutulmaya devam ediliyor
+        const lessons = [
+            {
+                "sentence": "Ellerimi yıkıyorum.",
+                "images": [
+                    {"src": "assets/dis_firca.png", "alt": "Diş Fırçalama", "is_correct": false},
+                    {"src": "assets/yemek.png", "alt": "Yemek Yeme", "is_correct": false},
+                    {"src": "assets/el_yikama.png", "alt": "El Yıkama", "is_correct": true},
+                ]
+            },
+            {
+                "sentence": "Ben kitap okuyorum.",
+                "images": [
+                    {"src": "assets/uyku.png", "alt": "Uyku", "is_correct": false},
+                    {"src": "assets/kitap.png", "alt": "Kitap Okuma", "is_correct": true},
+                    {"src": "assets/muzik.png", "alt": "Müzik Dinleme", "is_correct": false},
+                ]
+            },
+            {
+                "sentence": "Kedi uyuyor.",
+                "images": [
+                    {"src": "assets/kedi.png", "alt": "Kedi", "is_correct": true},
+                    {"src": "assets/fil.png", "alt": "Fil", "is_correct": false},
+                    {"src": "assets/kopek.png", "alt": "Köpek", "is_correct": false},
+                ]
+            },
+            {
+                "sentence": "Ben top oynuyorum.",
+                "images": [
+                    {"src": "assets/resim.png", "alt": "Resim Çizme", "is_correct": false},
+                    {"src": "assets/top.png", "alt": "Top Oynama", "is_correct": true},
+                    {"src": "assets/yemek.png", "alt": "Yemek Yeme", "is_correct": false},
+                ]
+            },
+            {
+                "sentence": "Ben hastayım.",
+                "images": [
+                    {"src": "assets/kitap.png", "alt": "Kitap", "is_correct": false},
+                    {"src": "assets/su.png", "alt": "Su İçme", "is_correct": false},
+                    {"src": "assets/hasta.png", "alt": "Hasta", "is_correct": true},
+                ]
+            },
+            {
+                "sentence": "Hava çok sıcak.",
+                "images": [
+                    {"src": "assets/soguk.png", "alt": "Soğuk", "is_correct": false},
+                    {"src": "assets/sicak.png", "alt": "Sıcak", "is_correct": true},
+                    {"src": "assets/yagmur.png", "alt": "Yağmur", "is_correct": false},
+                ]
+            },
+        ];
+
+        let currentLessonIndex = 0;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const currentSentence = document.getElementById('currentSentence');
+            const imageGallery = document.getElementById('imageGallery');
+            const nextButton = document.getElementById('nextButton');
+
+            const renderPage = (lessonData) => {
+                currentSentence.textContent = lessonData.sentence;
+                imageGallery.innerHTML = '';
+                nextButton.style.display = 'none';
+
+                const shuffledImages = [...lessonData.images].sort(() => Math.random() - 0.5);
+
+                shuffledImages.forEach(image => {
+                    const galleryItem = document.createElement('div');
+                    galleryItem.classList.add('gallery-item');
+                    
+                    // Resim altındaki yazıyı oluşturan kod satırları kaldırıldı
+                    
+                    const imgSrc = image.src; 
+
+                    const img = document.createElement('img');
+                    img.src = imgSrc;
+                    img.alt = image.alt;
+                    img.classList.add('gallery-image');
+                    /* Resim boyutları büyütüldü */
+                    img.style.width = '200px';
+                    img.style.height = '200px';
+                    img.style.objectFit = 'contain';
+
+                    galleryItem.appendChild(img);
+                    // Resim altındaki yazıyı ekleyen kod satırları kaldırıldı
+                    imageGallery.appendChild(galleryItem);
+
+                    galleryItem.addEventListener('click', () => {
+                        const isCorrect = image.is_correct;
+                        
+                        document.querySelectorAll('.gallery-item').forEach(item => {
+                            item.classList.remove('correct', 'incorrect');
+                            item.style.pointerEvents = 'none';
+                        });
+
+                        if (isCorrect) {
+                            galleryItem.classList.add('correct');
+                        } else {
+                            galleryItem.classList.add('incorrect');
+                            const correctImageItem = imageGallery.querySelector(`[alt="${lessonData.images.find(img => img.is_correct).alt}"]`).closest('.gallery-item');
+                            if (correctImageItem) {
+                                correctImageItem.classList.add('correct');
+                            }
+                        }
+                        
+                        nextButton.style.display = 'block';
+                    });
+                });
+            };
+
+            const endLesson = (message) => {
+                currentSentence.textContent = message;
+                imageGallery.innerHTML = '';
+                nextButton.style.display = 'none';
+            };
+            
+            const fetchNextLesson = () => {
+                if (currentLessonIndex >= lessons.length) {
+                    endLesson("Tebrikler! Tüm dersleri tamamladınız.");
+                    currentLessonIndex = 0;
+                } else {
+                    renderPage(lessons[currentLessonIndex]);
+                    currentLessonIndex++;
+                }
+            };
+            
+            fetchNextLesson();
+
+            nextButton.addEventListener('click', () => {
+                fetchNextLesson();
+            });
+        });
+    </script>
+</body>
+</html>

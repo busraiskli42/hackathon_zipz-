@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modüller</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css"> 
+    <style>
+        /* Modül sayfası için özel CSS */
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(135deg, #FFC080 0%, #a3e293 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .main-container {
+            background-color: transparent; 
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 1000px;
+            width: 100%;
+        }
+
+        .main-title {
+            font-family: 'Fredoka One', cursive;
+            font-size: 2.5rem;
+            color: #2C3E50;
+            margin-bottom: 50px;
+        }
+
+        .module-buttons-container {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            width: 100%;
+            flex-wrap: nowrap; 
+            align-items: center; 
+        }
+        
+        .module-card {
+            background-color: #DEDEDE;
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+            width: 200px;
+            height: 220px;
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            text-decoration: none;
+            color: #2C3E50;
+        }
+
+        .module-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .module-card a {
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+        }
+
+        .module-icon {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 20px;
+        }
+
+        .module-text {
+            font-family: 'Nunito', sans-serif;
+            font-size: 1.5em;
+            color: #2C3E50;
+            font-weight: 700;
+            text-align: center;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <h1 class="main-title">Modüller</h1>
+        <div class="module-buttons-container">
+            <div class="module-card">
+                <a href="iletisim.html">
+                    <img src="assets/iletisim_icon.png" alt="İletişim İkonu" class="module-icon">
+                    <p class="module-text">İletişim Becerileri</p>
+                </a>
+            </div>
+
+            <div class="module-card">
+                <a href="problemcozme.html">
+                    <img src="assets/problem_icon.png" alt="Problem İkonu" class="module-icon">
+                    <p class="module-text">Problem Çözme<br>Becerileri</p>
+                </a>
+            </div>
+
+            <div class="module-card">
+                <a href="cizim_tahtasi.html">
+                    <img src="assets/cizim_palet.png" alt="Çizim Tahtası İkonu" class="module-icon">
+                    <p class="module-text">Çizim Tahtası</p>
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

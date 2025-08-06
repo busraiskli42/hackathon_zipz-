@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Drawing</title>
+    <!-- Link your common style sheet here -->
+    <link rel="stylesheet" href="style.css"> 
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Genel Stil Ayarları */
+        :root {
+            --card-bg-color: #ffffff;
+            --text-color-dark: #333;
+            --main-bg-gradient: linear-gradient(135deg, #FFC080 0%, #a3e293 100%);
+            --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --card-hover-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+        }
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: var(--main-bg-gradient);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .main-container {
+            background-color: transparent; 
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 1000px; /* Genişlik artırıldı */
+            width: 100%;
+            /* position: relative; kaldırıldı, çünkü back-button artık fixed */
+        }
+
+        /* Geri Butonu Stilleri */
+        .back-button {
+            position: fixed; /* Buton ekranın sol üst köşesine sabitlendi */
+            top: 20px;
+            left: 20px;
+            width: 60px; /* Butonun boyutu ayarlandı */
+            height: 60px; /* Butonun boyutu ayarlandı */
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-decoration: none;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+            z-index: 1000; /* Diğer elemanların üzerinde görünmesini sağlar */
+        }
+        .back-button:hover {
+            transform: scale(1.1);
+        }
+        .back-button img {
+            width: 60px; /* Butonun boyutuna göre ayarlandı */
+            height: 60px; /* Butonun boyutuna göre ayarlandı */
+        }
+
+        /* Başlık Stilleri */
+        .main-title {
+            font-family: 'Fredoka One', cursive;
+            font-size: 2.5rem;
+            color: var(--text-color-dark);
+            margin-bottom: 30px;
+        }
+
+        /* Ana çizim kapsayıcısı */
+        .canvas-container {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Çizim alanı ve araçları için yeni kapsayıcı */
+        .drawing-area {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            gap: 25px;
+            flex-wrap: nowrap; /* Değiştirildi: Elemanların alt satıra kaymasını engeller */
+            max-width: 960px; /* Genişlik ayarlandı */
+            width: 100%;
+        }
+        
+        /* Çizim tuvali için özel stil */
+        #drawing-canvas {
+            border: 2px solid var(--text-color-dark);
+            border-radius: 15px;
+            background-color: white;
+            cursor: crosshair;
+            width: 80vw;
+            height: 80vw;
+            max-width: 600px;
+            max-height: 600px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Araç başlıkları için stil */
+        .drawing-tools h3 {
+            font-family: 'Fredoka One', cursive;
+            color: var(--text-color-dark);
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+            text-align: center;
+        }
+
+        /* Araç kapsayıcıları */
+        .color-palette, .pen-types, .brush-sizes {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        /* Yeni: Araç panellerini daha dengeli hale getir */
+        .color-palette, .right-tools {
+            flex: 1;
+            min-width: 100px;
+        }
+
+        /* Renk paleti stilleri */
+        .color-palette button {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .color-palette button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+        }
+        .color-palette .active {
+            border-color: var(--text-color-dark);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            transform: scale(1.1);
+        }
+        /* Kalem türü stilleri */
+        .pen-types button {
+            padding: 10px 20px;
+            border-radius: 10px;
+            border: 1px solid var(--text-color-dark);
+            background-color: #f0f0f0;
+            cursor: pointer;
+            font-family: 'Nunito', sans-serif;
+            font-weight: bold;
+            transition: transform 0.2s;
+        }
+        .pen-types button:hover {
+            transform: translateY(-1px);
+        }
+        .pen-types .active {
+            background-color: var(--text-color-dark);
+            color: white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* Fırça boyutu için kaydırıcı stili */
+        #brush-size-slider {
+            width: 150px;
+            height: 10px;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background: #ddd;
+            border-radius: 5px;
+            outline: none;
+            cursor: pointer;
+            transform: rotate(270deg);
+            margin: 50px 0;
+        }
+        #brush-size-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #FF8C00;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid #fff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        #brush-size-slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            background: #FF8C00;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid #fff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        /* Ana butonlar */
+        .canvas-buttons {
+            flex-direction: row;
+            margin-top: 20px;
+            gap: 15px;
+        }
+        .canvas-buttons button {
+            padding: 12px 25px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 15px;
+            border: none;
+            cursor: pointer;
+            color: white;
+            background-image: linear-gradient(135deg, #FFD700, #FF8C00);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            transition: transform 0.2s, box-shadow 0.2s;
+            font-family: 'Nunito', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .canvas-buttons button:hover {
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+        }
+        /* Geri bildirim kartı */
+        #ai-feedback {
+            width: 80vw;
+            max-width: 600px;
+            margin-top: 20px;
+        }
+        #ai-feedback p {
+            font-size: 1.1rem;
+        }
+
+    </style>
+</head>
+<body>
+    <!-- Geri butonu main-container dışına taşındı -->
+    <a href="modules.html" class="back-button"> <!-- href="index.html" olarak güncellendi ve onclick kaldırıldı -->
+        <img src="assets/back_icon.png" alt="Geri Dön" class="back-icon">
+    </a>
+    <div class="main-container">
+        <h1 class="main-title">Yapay Zeka ile Çizim</h1>
+
+        <div class="canvas-container">
+            <div class="drawing-area">
+                <!-- Color palette moved to the left -->
+                <div class="color-palette drawing-tools">
+                    <h3>Renkler</h3>
+                    <button class="color-button active" style="background-color: #333;" data-color="#333"></button>
+                    <button class="color-button" style="background-color: #ff4d4d;" data-color="#ff4d4d"></button>
+                    <button class="color-button" style="background-color: #4d94ff;" data-color="#4d94ff"></button>
+                    <button class="color-button" style="background-color: #4dff4d;" data-color="#4dff4d"></button>
+                    <button class="color-button" style="background-color: #ffcc00;" data-color="#ffcc00"></button>
+                </div>
+                
+                <!-- Drawing canvas in the center -->
+                <canvas id="drawing-canvas" width="600" height="600"></canvas>
+                
+                <!-- Pen thickness and types moved to the right -->
+                <div class="right-tools">
+                    <div class="pen-types drawing-tools">
+                        <h3>Kalem Türü</h3>
+                        <button class="pen-type-button active" data-type="felt-tip">Keçeli</button>
+                        <button class="pen-type-button" data-type="ballpoint">Tükenmez</button>
+                    </div>
+                    <div class="brush-sizes drawing-tools">
+                        <h3>Kalınlık</h3>
+                        <input type="range" id="brush-size-slider" min="1" max="30" value="10">
+                    </div>
+                </div>
+            </div>
+
+            <div class="canvas-buttons">
+                <button id="clear-button">Temizle</button>
+                <button id="eraser-button">Silgi</button>
+                <button id="send-button">Yapay Zekaya Gönder</button>
+            </div>
+            
+            <!-- AI feedback will be written in this area -->
+            <div id="ai-feedback" class="module-card" style="padding: 20px;">
+                <p>Ne çizdiğini tahmin etmem için bir şeyler çiz!</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Code -->
+    <script>
+        // Set canvas dimensions after DOM content is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            const canvas = document.getElementById('drawing-canvas');
+            const container = canvas.parentElement;
+            
+            // Dynamically set canvas dimensions based on container size
+            const size = Math.min(container.clientWidth, 600);
+            canvas.width = size;
+            canvas.height = size;
+            
+            const context = canvas.getContext('2d');
+            const clearButton = document.getElementById('clear-button');
+            const sendButton = document.getElementById('send-button');
+            const eraserButton = document.getElementById('eraser-button');
+            const feedbackDiv = document.getElementById('ai-feedback');
+            const brushSizeSlider = document.getElementById('brush-size-slider');
+
+            let isDrawing = false;
+            let currentBrushSize = brushSizeSlider.value;
+            let currentColor = '#333';
+            let currentPenType = 'felt-tip';
+
+            function applyPenStyle() {
+                // Apply style settings based on pen type
+                switch (currentPenType) {
+                    case 'felt-tip':
+                        context.lineCap = 'round';
+                        context.lineWidth = currentBrushSize;
+                        context.strokeStyle = currentColor;
+                        context.globalAlpha = 0.4;
+                        break;
+                    case 'ballpoint':
+                        context.lineCap = 'butt';
+                        context.lineWidth = currentBrushSize * 0.4;
+                        context.strokeStyle = currentColor;
+                        context.globalAlpha = 1.0;
+                        break;
+                    case 'eraser':
+                        context.lineCap = 'round';
+                        context.lineWidth = currentBrushSize * 2;
+                        context.strokeStyle = '#ffffff'; // White background color
+                        context.globalAlpha = 1.0;
+                        break;
+                }
+            }
+            
+            // Listen for drawing events
+            canvas.addEventListener('mousedown', startDrawing);
+            canvas.addEventListener('mouseup', stopDrawing);
+            canvas.addEventListener('mousemove', draw);
+            
+            // For mobile devices
+            canvas.addEventListener('touchstart', startDrawing);
+            canvas.addEventListener('touchend', stopDrawing);
+            canvas.addEventListener('touchmove', draw);
+
+            function startDrawing(e) {
+                e.preventDefault();
+                isDrawing = true;
+                context.beginPath();
+                const pos = getMousePos(e);
+                context.moveTo(pos.x, pos.y);
+                applyPenStyle();
+            }
+
+            function stopDrawing() {
+                isDrawing = false;
+                context.closePath();
+            }
+
+            function draw(e) {
+                if (!isDrawing) return;
+                const pos = getMousePos(e);
+                context.lineTo(pos.x, pos.y);
+                context.stroke();
+            }
+            
+            function getMousePos(e) {
+                const rect = canvas.getBoundingClientRect();
+                const scaleX = canvas.width / rect.width;
+                const scaleY = canvas.height / rect.height;
+                if (e.touches) {
+                    return {
+                        x: (e.touches[0].clientX - rect.left) * scaleX,
+                        y: (e.touches[0].clientY - rect.top) * scaleY
+                    };
+                }
+                return {
+                    x: (e.clientX - rect.left) * scaleX,
+                    y: (e.clientY - rect.top) * scaleY
+                };
+            }
+
+            clearButton.addEventListener('click', () => {
+                context.clearRect(0, 0, canvas.width, canvas.height);
+                feedbackDiv.innerHTML = '<p>Ne çizdiğini tahmin etmem için bir şeyler çiz!</p>';
+            });
+
+            sendButton.addEventListener('click', async () => {
+                feedbackDiv.innerHTML = '<p>Çiziminizi analiz ediyorum...</p>';
+                sendButton.disabled = true;
+                
+                const imageDataUrl = canvas.toDataURL('image/jpeg', 0.9);
+                const base64Data = imageDataUrl.split(',')[1];
+                
+                try {
+                    // Bu API anahtarının Canvas ortamı tarafından sağlanması beklenir.
+                    const apiKey = ""; 
+                    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+                    
+                    const payload = {
+                        contents: [
+                            {
+                                role: "user",
+                                parts: [
+                                    { text: "Lütfen bu çizimde ne olduğunu tanımlayın. Kısa ve net bir açıklama yapın." },
+                                    {
+                                        inlineData: {
+                                            mimeType: "image/jpeg",
+                                            data: base64Data
+                                        }
+                                    }
+                                ]
+                            }
+                        ],
+                    };
+
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    // Check if the response was successful
+                    if (!response.ok) {
+                        const errorDetails = await response.text();
+                        console.error('API yanıtı başarılı değil. Tam hata detayı:', errorDetails);
+                        if (response.status === 403) {
+                            throw new Error(`API erişim hatası: ${response.status}. Bu, Canvas ortamının API'ye erişimini engelleyen bir altyapı sorunudur ve sizin tarafınızdan düzeltilemez. Lütfen daha sonra tekrar deneyin.`);
+                        } else {
+                            throw new Error(`API yanıtı başarılı değil: ${response.status} ${response.statusText}.`);
+                        }
+                    }
+
+                    const result = await response.json();
+                    
+                    console.log('API response:', result); 
+
+                    const hasTextContent = result?.candidates?.[0]?.content?.parts?.[0]?.text;
+                    if (hasTextContent) {
+                        feedbackDiv.innerHTML = `<p><strong>Tahminim:</strong> ${hasTextContent}</p>`;
+                    } else {
+                        feedbackDiv.innerHTML = '<p>Üzgünüm, çiziminiz hakkında bir açıklama bulamadım. Lütfen daha belirgin bir şeyler çizmeyi deneyin.</p>';
+                        console.error('API yanıt yapısı beklenmedik veya metin içeriği eksik:', result);
+                    }
+                } catch (error) {
+                    feedbackDiv.innerHTML = `<p>Analiz sırasında bir hata oluştu: ${error.message}</p>`;
+                    console.error('Error:', error);
+                } finally {
+                    sendButton.disabled = false;
+                }
+            });
+
+            eraserButton.addEventListener('click', () => {
+                const penTypeButtons = document.querySelectorAll('.pen-type-button');
+                penTypeButtons.forEach(btn => btn.classList.remove('active'));
+                currentPenType = 'eraser';
+                applyPenStyle();
+            });
+
+            // Event listeners for color palette
+            const colorButtons = document.querySelectorAll('.color-button');
+            colorButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    colorButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    currentColor = button.dataset.color;
+                    if (currentPenType !== 'eraser') {
+                        applyPenStyle();
+                    }
+                });
+            });
+
+            // Event listener for brush size
+            brushSizeSlider.addEventListener('input', (e) => {
+                currentBrushSize = e.target.value;
+                applyPenStyle();
+            });
+
+            // Event listeners for pen types
+            const penTypeButtons = document.querySelectorAll('.pen-type-button');
+            penTypeButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    penTypeButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    currentPenType = button.dataset.type;
+                    applyPenStyle();
+                });
+            });
+
+            // Set initial pen style
+            applyPenStyle();
+        });
+    </script>
+</body>
+</html>

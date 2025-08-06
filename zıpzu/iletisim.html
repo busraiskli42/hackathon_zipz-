@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>İletişim Becerileri</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Genel Stil Ayarları */
+        :root {
+            --card-bg-color: #ffffff;
+            --text-color-dark: #333;
+            --main-bg-gradient: linear-gradient(135deg, #FFC080 0%, #a3e293 100%);
+            --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --card-hover-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+        }
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: var(--main-bg-gradient);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .main-container {
+            background-color: transparent; 
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 1000px; /* Daha fazla kart sığması için maksimum genişlik artırıldı */
+            width: 100%;
+            /* position: relative; kaldırıldı, çünkü back-button artık fixed */
+        }
+
+        /* Geri Butonu Stilleri */
+        .back-button {
+            position: fixed; /* Buton ekranın sol üst köşesine sabitlendi */
+            top: 20px;
+            left: 20px;
+            width: 60px; /* Butonun boyutu ayarlandı */
+            height: 60px; /* Butonun boyutu ayarlandı */
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-decoration: none;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+            z-index: 1000; /* Diğer elemanların üzerinde görünmesini sağlar */
+        }
+        .back-button:hover {
+            transform: scale(1.1);
+        }
+        .back-button img {
+            width: 60px; /* Butonun boyutuna göre ayarlandı */
+            height: 60px; /* Butonun boyutuna göre ayarlandı */
+        }
+        
+        /* Başlık Stilleri */
+        .main-title {
+            font-family: 'Fredoka One', cursive;
+            font-size: 2.5rem;
+            color: var(--text-color-dark);
+            margin-bottom: 30px;
+        }
+        
+        /* Kartların Kapsayıcısı */
+        .module-buttons-container {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            width: 100%;
+            /* Kartların alt alta geçmesini engelleyen ve aynı hizada tutan değişiklikler */
+            flex-wrap: nowrap; 
+            align-items: center; 
+        }
+        
+        /* Kart Stilleri */
+        .module-card {
+            background-color: #DEDEDE;
+            border-radius: 20px;
+            box-shadow: var(--card-shadow);
+            transition: transform 0.2s, box-shadow 0.2s;
+            width: 200px;
+            height: 220px; /* Sabit bir genişlik belirledik */
+            padding: 30px 20px;
+            display: flex;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            flex-direction: column;
+            justify-content: center;
+            align-items: center; /* Resimlerin ve yazıların yatayda ortalanması için eklendi */
+            text-align: center;
+            text-decoration: none;
+            color: #2C3E50;
+        }
+        .module-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Linklerin Altındaki Çizgiyi Kaldırma ve Tüm Alanı Tıklanabilir Yapma */
+        .module-card a {
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            justify-content: center; /* İçeriklerin dikeyde ortalanması için eklendi */
+            align-items: center; /* İçeriklerin yatayda ortalanması için eklendi */
+            width: 100%;
+            height: 100%; /* Linkin tüm kart alanını kaplaması için eklendi */
+        }
+
+        /* İkon ve Metin Stilleri */
+        .module-icon.emoji {
+            font-size: 4em;
+            line-height: 1;
+            margin-bottom: 20px;
+        }
+        .module-text {
+            font-family: 'Nunito', sans-serif;
+            font-size: 1.5em;
+            color: #2C3E50;
+            font-weight: 700;
+            text-align: center;
+            line-height: 1.4;  
+        }
+    </style>
+</head>
+<body>
+    <!-- Geri butonu main-container dışına taşındı -->
+    <a href="modules.html" class="back-button"> <!-- href="index.html" olarak güncellendi ve onclick kaldırıldı -->
+        <img src="assets/back_icon.png" alt="Geri Dön" class="back-icon">
+    </a>
+    <div class="main-container">
+        <h1 class="main-title">İletişim Becerileri</h1>
+
+        <!-- Tüm kartları tek bir kapsayıcıda tutuyoruz -->
+        <div class="module-buttons-container">
+            <!-- Günlük Kelime Resim Eşleştirme kartı -->
+            <div class="module-card">
+                <a href="kelimeeslestirme.html">
+                    <span class="module-icon emoji">🖼️</span>
+                    <p class="module-text">Günlük Kelime<br>Resim Eşleştirme</p>
+                </a>
+            </div>
+            
+            <!-- Basit Cümle Kuruyorum kartı -->
+            <div class="module-card">
+                <a href="basit_cumleler.html">
+                    <span class="module-icon emoji">✍️</span>
+                    <p class="module-text">Basit Cümle<br>Kuruyorum</p>
+                </a>
+            </div>
+            
+            <!-- Duygularımı İfade Ediyorum kartı -->
+            <div class="module-card">
+                <a href="duygu.html">
+                    <span class="module-icon emoji">😊</span>
+                    <p class="module-text">Duygularımı<br>İfade Ediyorum</p>
+                </a>
+            </div>
+
+            <!-- Selamlaşma Vedalaşma kartı -->
+            <div class="module-card">
+                <a href="selamlasma.html">
+                    <span class="module-icon emoji">👋</span>
+                    <p class="module-text">Selamlaşma<br>Vedalaşma</p>
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

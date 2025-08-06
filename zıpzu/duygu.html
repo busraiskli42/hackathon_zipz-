@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Duygu Kartları</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Genel Stil Ayarları */
+        :root {
+            --card-bg-color: #DEDEDE;
+            --text-color-dark: #2C3E50;
+            --main-bg-gradient: linear-gradient(135deg, #FFC080 0%, #a3e293 100%);
+            --card-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            --card-hover-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: var(--main-bg-gradient);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            color: var(--text-color-dark);
+        }
+
+        .main-container {
+            width: 100%;
+            max-width: 1200px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+            box-sizing: border-box;
+            position: relative; /* İçerideki absolute konumlandırılmış buton için gerekli */
+        }
+
+        /* Başlık Stili */
+        .main-title {
+            font-family: 'Fredoka One', cursive;
+            font-size: 3.2em;
+            color: var(--text-color-dark);
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        /* Geri Butonu Stilleri (Ortak Özellikler) */
+        .back-button,
+        .home-back-button {
+            width: 60px; /* Buton boyutu diğer sayfalarla tutarlı hale getirildi */
+            height: 60px; /* Buton boyutu diğer sayfalarla tutarlı hale getirildi */
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-decoration: none;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+            z-index: 1000; /* Diğer elemanların üzerinde görünmesini sağlar */
+        }
+
+        .back-button:hover,
+        .home-back-button:hover {
+            transform: scale(1.1);
+        }
+        
+        .back-button img,
+        .home-back-button img {
+            width: 60px; /* Butonun boyutuna göre ayarlandı */
+            height: 60px; /* Butonun boyutuna göre ayarlandı */
+        }
+
+        /* Ana Sayfaya Dön Butonu Stili (Ekranın sol üst köşesine sabit) */
+        .home-back-button {
+            position: fixed; /* Ekranın sol üst köşesine sabitlendi */
+            top: 20px;
+            left: 20px;
+        }
+
+        /* İç Geri Butonu Stili (main-container'a göre konumlu) */
+        .back-button {
+            position: absolute; /* main-container'a göre konumlu */
+            top: 20px;
+            left: 20px;
+        }
+
+        /* Kart Konteyneri */
+        .card-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            width: 80%;
+            max-width: 600px;
+            flex-wrap: wrap;
+        }
+        
+        /* Her zaman 2x2 düzeni için kart genişliği */
+        .card {
+            background-color: var(--card-bg-color);
+            border-radius: 20px;
+            padding: 20px 20px;
+            width: calc(50% - 10px); /* 2x2 düzeni için */
+            min-width: 200px;
+            height: auto;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--card-shadow);
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-decoration: none;
+            color: var(--text-color-dark);
+            box-sizing: border-box;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--card-hover-shadow);
+        }
+
+        /* Görsel Kartları İçin Stil */
+        .card-image {
+            width: 60%;
+            height: auto;
+            max-height: 120px;
+            margin-bottom: 10px;
+            object-fit: contain;
+        }
+
+        /* Emoji Kartları İçin Özel Stil */
+        .card-emoji {
+            font-size: 8em; /* Emojilerin büyük görünmesini sağlar */
+            line-height: 1;
+            margin-bottom: 10px;
+        }
+
+        .card-text {
+            font-family: 'Nunito', sans-serif;
+            font-size: 1.2em;
+            color: var(--text-color-dark);
+            font-weight: 700;
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        /* Gizli/Görünür Elemanlar */
+        .hidden {
+            display: none;
+        }
+
+        /* Küçük ekranlar için responsive ayarlar */
+        @media (max-width: 768px) {
+            .main-title {
+                font-size: 2.5em;
+            }
+            .card-container {
+                width: 95%;
+                max-width: none;
+                justify-content: space-around;
+            }
+            .card {
+                width: calc(50% - 10px);
+                min-width: 140px;
+                min-height: 160px;
+                padding: 10px;
+            }
+            .card-emoji {
+                font-size: 4em;
+            }
+            .card-image {
+                width: 50%;
+                max-height: 80px;
+            }
+            .card-text {
+                font-size: 0.9em;
+            }
+            /* Responsive için buton boyutları */
+            .back-button,
+            .home-back-button {
+                width: 40px;
+                height: 40px;
+                top: 15px;
+                left: 15px;
+            }
+            .back-button img,
+            .home-back-button img {
+                width: 24px;
+                height: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Ana Sayfaya Dön Butonu (Ekranın sol üst köşesine sabit) -->
+    <a href="iletisim.html" class="home-back-button">
+        <img src="assets/back_icon.png" alt="Geri Dön" class="back-icon">
+    </a>
+
+    <div class="main-container">
+        <!-- İç Geri Butonu (main-container'a göre konumlu, başlangıçta gizli) -->
+        <a href="#" class="back-button hidden"> <!-- onclick kaldırıldı, JavaScript event listener kullanılıyor -->
+            <img src="assets/back_icon.png" alt="Geri" class="back-icon">
+        </a>
+        
+        <h1 class="main-title">Duygu Kartları</h1>
+        
+        <div id="main-feelings" class="card-container">
+            </div>
+
+        <div id="solution-cards" class="card-container hidden">
+            </div>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const mainFeelingsContainer = document.getElementById('main-feelings');
+            const solutionCardsContainer = document.getElementById('solution-cards');
+            const homeBackButton = document.querySelector('.home-back-button');
+            const backButton = document.querySelector('.back-button');
+            const mainTitle = document.querySelector('.main-title');
+
+            const data = {
+                mutlu: {
+                    mainCard: "Mutlu",
+                    mainImage: "😊",
+                    solutions: [
+                        { text: "Ailemle birlikte vakit geçirebilirim.", image: "assets/mutlu-cozum-sarilma.jpg" },
+                        { text: "Oyuncaklarımı arkadaşlarımla paylaşmayı deneyebilirim.", image: "assets/mutlu-cozum-paylasma.png" },
+                        { text: "Annem ile sımsıkı sarılabilirim.", image: "assets/anne.png" },
+                        { text: "En sevdiğim yemeği yiyebilirim.", image: "assets/mutlu-cozum-yemek.png" }
+                    ]
+                },
+                kizgin: {
+                    mainCard: "Kızgın",
+                    mainImage: "😡",
+                    solutions: [
+                        { text: "Derin bir nefes alıp yavaşça verebilirim.", image: "assets/kizgin-cozum-nefes.png" },
+                        { text: "Beni kızdıran şeyi bir yetişkine anlatabilirim.", image: "assets/kizgin-cozum-konusma.png" },
+                        { text: "Başka bir odaya gidip en sevdiğim oyuncağımla oynayabilirim.", image: "assets/kizgin-cozum-dikkat-dagitma.png" },
+                        { text: "Sinirimi atmak için uyumaya çalışabilirim.", image: "assets/kizgin-cozum-yastik.png" }
+                    ]
+                },
+                uzgun: {
+                    mainCard: "Üzgün",
+                    mainImage: "😢",
+                    solutions: [
+                        { text: "Annemden/Babamdan bana sarılmasını isteyebilirim.", image: "assets/uzgun-cozum-sarilma.png" },
+                        { text: "Üzgün olduğum şeyi resimle anlatabilirim.", image: "assets/resim.png" },
+                        { text: "En sevdiğim şarkıyı dinleyebilirim.", image: "assets/zgun-cozum-sarki.png" },
+                        { text: "Kırılan oyuncağımı tamir edebilirim.", image: "assets/tamir.png" }
+                    ]
+                },
+                korkmus: {
+                    mainCard: "Korkmuş",
+                    mainImage: "😨",
+                    solutions: [
+                        { text: "Annemle birlikte olup güvende olduğumu hissedebilirim.", image: "assets/korku.png" },
+                        { text: "Karanlık bir yerde korkarsam ışığı açabilirim.", image: "assets/korkmus-cozum-isik.png" },
+                        { text: "Korktunca babama seslenebilirim.", image: "assets/korkmus-cozum-hayal.png" },
+                        { text: "Yüksek sesler duyduğumda kulaklarımı kapatabilirim.", image: "assets/korkmus-cozum-kulak.png" }
+                    ]
+                }
+            };
+
+            function renderMainFeelings() {
+                mainFeelingsContainer.innerHTML = '';
+                Object.keys(data).forEach(feelingKey => {
+                    const feeling = data[feelingKey];
+                    const card = document.createElement('div');
+                    card.classList.add('card');
+                    card.setAttribute('data-feeling', feelingKey);
+                    card.innerHTML = `
+                        <span class="card-emoji">${feeling.mainImage}</span>
+                        <span class="card-text">${feeling.mainCard}</span>
+                    `;
+                    card.addEventListener('click', () => showSolutionsForFeeling(feelingKey));
+                    mainFeelingsContainer.appendChild(card);
+                });
+                mainFeelingsContainer.classList.remove('hidden');
+                solutionCardsContainer.classList.add('hidden');
+                backButton.classList.add('hidden');
+                homeBackButton.classList.remove('hidden');
+                mainTitle.textContent = "Duygu Kartları";
+            }
+
+            function showSolutionsForFeeling(feelingKey) {
+                const feeling = data[feelingKey];
+                solutionCardsContainer.innerHTML = '';
+
+                mainTitle.textContent = feeling.mainCard + " Olduğunda Ne Yapabilirim?";
+
+                feeling.solutions.forEach(solution => {
+                    const card = document.createElement('div');
+                    card.classList.add('card');
+                    card.innerHTML = `
+                        <img src="${solution.image}" alt="${solution.text}" class="card-image">
+                        <span class="card-text">${solution.text}</span>
+                    `;
+                    solutionCardsContainer.appendChild(card);
+                });
+
+                mainFeelingsContainer.classList.add('hidden');
+                solutionCardsContainer.classList.remove('hidden');
+                backButton.classList.remove('hidden');
+                homeBackButton.classList.add('hidden');
+            }
+
+            backButton.addEventListener('click', (e) => {
+                e.preventDefault(); // Varsayılan link davranışını engelle
+                renderMainFeelings(); // Ana duygu kartlarını tekrar render et
+            });
+
+            renderMainFeelings();
+        });
+    </script>
+</body>
+</html>

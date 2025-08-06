@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zuzu - Basit Sorunlar</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --secondary-bg-color: #ffffff;
+            --text-color-dark: #333;
+            --text-color-light: #fff;
+            --correct-color: #4CAF50;
+            --incorrect-color: #f44336;
+        }
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(135deg, #FFC080 0%, #a3e293 100%);
+            background-blend-mode: multiply;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .main-container {
+            background-color: transparent; 
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 800px;
+            width: 100%;
+            position: relative; /* İçerideki absolute butonlar için */
+        }
+        .back-button {
+            position: fixed; /* Fixed olarak değiştirildi */
+            top: 20px;
+            left: 20px;
+            width: 60px; /* Boyut güncellendi */
+            height: 60px; /* Boyut güncellendi */
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-decoration: none;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+            z-index: 1000;
+        }
+        .back-button:hover {
+            transform: scale(1.1);
+        }
+        .back-button img {
+            width: 60px; /* Boyut güncellendi */
+            height: 60px; /* Boyut güncellendi */
+        }
+        .main-title {
+            font-family: 'Fredoka One', cursive;
+            font-size: 2.5rem;
+            color: var(--text-color-dark);
+            margin-bottom: 30px;
+        }
+        .lesson-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+        .sentence-display-container {
+            background-color: var(--secondary-bg-color);
+            padding: 20px 40px;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #currentSentence {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-color-dark);
+            margin: 0;
+        }
+        #feedbackMessage {
+            font-size: 1.5rem;
+            font-weight: bold;
+            height: 2rem;
+            margin: 10px 0 0 0;
+        }
+        #feedbackMessage.correct {
+            color: var(--correct-color);
+        }
+        #feedbackMessage.incorrect {
+            color: var(--incorrect-color);
+        }
+        .image-gallery-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .gallery-item {
+            background-color: var(--secondary-bg-color);
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            width: 220px;
+            height: 220px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+            border: 5px solid transparent;
+        }
+        .gallery-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+        }
+        .gallery-item.correct {
+            border-color: var(--correct-color);
+        }
+        .gallery-item.incorrect {
+            border-color: var(--incorrect-color);
+            animation: shake 0.5s;
+            animation-iteration-count: 2;
+        }
+        @keyframes shake {
+            0% { transform: translate(1px, 1px) rotate(0deg); }
+            10% { transform: translate(-1px, -2px) rotate(-1deg); }
+            20% { transform: translate(-3px, 0px) rotate(1deg); }
+            30% { transform: translate(3px, 2px) rotate(0deg); }
+            40% { transform: translate(1px, -1px) rotate(1deg); }
+            50% { transform: translate(-1px, 2px) rotate(-1deg); }
+            60% { transform: translate(-3px, 1px) rotate(0deg); }
+            70% { transform: translate(3px, 1px) rotate(-1deg); }
+            80% { transform: translate(-1px, -1px) rotate(1deg); }
+            90% { transform: translate(1px, 2px) rotate(0deg); }
+            100% { transform: translate(1px, -2px) rotate(-1deg); }
+        }
+        .gallery-item p {
+            margin-top: 10px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-color-dark);
+            text-align: center;
+        }
+        .gallery-item img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+        .next-button {
+            background-color: #ff9800;
+            color: var(--text-color-light);
+            border: none;
+            padding: 15px 40px;
+            border-radius: 30px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+        .next-button:hover {
+            background-color: #e68900;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <a href="problemcozme.html" class="back-button">
+            <img src="assets/back_icon.png" alt="Geri Dön" class="back-icon">
+        </a>
+        <h1 class="main-title">Basit Sorun Tanıma</h1>
+        
+        <div class="lesson-container">
+            <div class="sentence-display-container">
+                <p id="currentSentence" class="sentence-text">Yükleniyor...</p>
+            </div>
+            
+            <p id="feedbackMessage"></p>
+
+            <div id="imageGallery" class="image-gallery-container">
+                </div>
+
+            <button id="nextButton" class="next-button" style="display: none;">Sonraki</button>
+        </div>
+    </div>
+
+    <script>
+        const scenarios = [
+            {
+                scenario: "Oyuncağım kırıldı. Bu sorunu çözmek için ne yapmalısın?",
+                images: [
+                    {"src": "assets/tamir.png", "alt": "Oyuncağı Tamir Etmek", "is_correct": true},
+                    {"src": "assets/ağlamak.png", "alt": "Ağlamak", "is_correct": false},
+                    {"src": "assets/çöpe_atmak.png", "alt": "Çöpe Atmak", "is_correct": false},
+                ],
+                feedback: {
+                    correct: "Harika! Kırılan eşyaları tamir etmeye çalışmak iyi bir fikir.",
+                    incorrect: "Bu pek yardımcı olmaz. Daha iyi bir çözüm düşünebilirsin."
+                }
+            },
+            {
+                scenario: "Su içmek istiyorsun ama bardağın boş. Ne yaparsın?",
+                images: [
+                    {"src": "assets/uyumak.png", "alt": "Uyumak", "is_correct": false},
+                    {"src": "assets/su_doldurmak.png", "alt": "Su Doldurmak", "is_correct": true},
+                    {"src": "assets/yemek_yemek.png", "alt": "Yemek Yemek", "is_correct": false},
+                ],
+                feedback: {
+                    correct: "Doğru! Bardağı suyla doldurmak en iyi çözüm.",
+                    incorrect: "Bu sorunu çözmek için suyla ilgili bir şey yapmalısın."
+                }
+            },
+            {
+                scenario: "Düştün ve yaralandın. Bu durumda ne yapmalısın?",
+                images: [
+                    {"src": "assets/koşma.png", "alt": "Koşmak", "is_correct": false},
+                    {"src": "assets/ağlamak.png", "alt": "Ağlamak", "is_correct": false},
+                    {"src": "assets/yaralı.png", "alt": "Yaraları sarmak", "is_correct": true},
+                ],
+                feedback: {
+                    correct: "Harika! Sakince kalıp yaraların sarılmasına izin vermek iyi bir fikir.",
+                    incorrect: "Bu pek yardımcı olmaz. Daha iyi bir çözüm düşünebilirsin."
+                }
+            },
+            {
+                scenario: "Arkadaşınla kavga ettiğinde ne yapmalısın ?",
+                images: [
+                    {"src": "assets/uyumak.png", "alt": "Uyumak", "is_correct": false},
+                    {"src": "assets/konuşma.png", "alt": "Konuşmak", "is_correct": true},
+                    {"src": "assets/kitap.png", "alt": "Kitap okumak", "is_correct": false},
+                ],
+                feedback: {
+                    correct: "Doğru! Arkadaşınla sakince konuşmak sorunu çözmede yardımcı olur.",
+                    incorrect: "Bu pek yardımcı olmaz. Daha iyi bir çözüm düşünebilirsin."
+                }
+            },
+            {
+                scenario: "Odamızın ışığını kapatıp karanlıktan korktuğumuz zaman ne yapmalıyız? Bir fikrin var mı?",
+                images: [
+                    {"src": "assets/anne.png", "alt": "Anneye sarılmak", "is_correct": true},
+                    {"src": "assets/muzik.png", "alt": "Müzik dinlemek", "is_correct": false},
+                    {"src": "assets/resim.png", "alt": "Resim çizmek", "is_correct": false},
+                ],
+                feedback: {
+                    correct: "Harika! Annemize sarılıp sakinleşmek iyi fikir.",
+                    incorrect: "Bu pek yardımcı olmaz. Daha iyi bir çözüm düşünebilirsin."
+                }
+            },
+            {
+                scenario: "Arkadaşın okula beslenme getirmediğini gördün. Bu sorunu çözmek için ne yapmalısın?",
+                images: [
+                    {"src": "assets/paylaş.png", "alt": "Paylaşmak", "is_correct": true},
+                    {"src": "assets/yemek_yemek.png", "alt": "Yemek yeme", "is_correct": false},
+                    {"src": "assets/su_doldurmak.png", "alt": "Su doldurmak", "is_correct": false},
+                ],
+                feedback: {
+                    correct: "Çok doğru! Yemeğini arkadaşınla paylaşabilir birlikte yiyebilirsiniz.",
+                    incorrect: "Bu pek yardımcı olmaz. Daha iyi bir çözüm düşünebilirsin."
+                }
+            },
+        ];
+
+        let currentScenarioIndex = 0;
+        const currentSentence = document.getElementById('currentSentence');
+        const imageGallery = document.getElementById('imageGallery');
+        const feedbackMessage = document.getElementById('feedbackMessage');
+        const nextButton = document.getElementById('nextButton');
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function loadScenario() {
+            if (currentScenarioIndex >= scenarios.length) {
+                currentSentence.textContent = "Tebrikler! Tüm senaryoları tamamladın.";
+                imageGallery.innerHTML = '';
+                feedbackMessage.textContent = '';
+                feedbackMessage.className = '';
+                nextButton.style.display = 'none';
+                return;
+            }
+
+            const currentScenario = scenarios[currentScenarioIndex];
+            currentSentence.textContent = currentScenario.scenario;
+            feedbackMessage.textContent = '';
+            feedbackMessage.className = '';
+            nextButton.style.display = 'none';
+
+            imageGallery.innerHTML = '';
+            const shuffledImages = [...currentScenario.images];
+            shuffleArray(shuffledImages);
+
+            shuffledImages.forEach(image => {
+                const card = document.createElement('div');
+                card.className = 'gallery-item';
+                card.dataset.correct = image.is_correct;
+
+                const img = document.createElement('img');
+                img.src = image.src;
+                img.alt = image.alt;
+
+                card.appendChild(img);
+                imageGallery.appendChild(card);
+
+                card.addEventListener('click', handleOptionClick);
+                card.style.pointerEvents = 'auto';
+            });
+        }
+
+        function handleOptionClick(event) {
+            const clickedCard = event.currentTarget;
+            const isCorrect = clickedCard.dataset.correct === 'true';
+            const currentScenario = scenarios[currentScenarioIndex];
+
+            feedbackMessage.classList.remove('correct', 'incorrect');
+            Array.from(imageGallery.children).forEach(card => {
+                card.classList.remove('correct', 'incorrect');
+                card.classList.remove('shake-animation');
+            });
+
+            if (!isCorrect) {
+                feedbackMessage.textContent = currentScenario.feedback.incorrect;
+                feedbackMessage.classList.add('incorrect');
+                clickedCard.classList.add('incorrect');
+                
+                clickedCard.classList.add('shake-animation');
+                clickedCard.addEventListener('animationend', () => {
+                    clickedCard.classList.remove('shake-animation');
+                }, { once: true });
+
+                return;
+            }
+
+            feedbackMessage.textContent = currentScenario.feedback.correct;
+            feedbackMessage.classList.add('correct');
+            clickedCard.classList.add('correct');
+
+            Array.from(imageGallery.children).forEach(card => {
+                card.removeEventListener('click', handleOptionClick);
+                card.style.pointerEvents = 'none';
+            });
+
+            nextButton.style.display = 'block';
+        }
+
+        nextButton.addEventListener('click', () => {
+            currentScenarioIndex++;
+            loadScenario();
+        });
+
+        loadScenario();
+    </script>
+</body>
+</html>

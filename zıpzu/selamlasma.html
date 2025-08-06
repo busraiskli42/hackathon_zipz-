@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selamlaşma ve Vedalaşma</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Genel Stil Ayarları */
+        :root {
+            --card-bg-color: #ffffff;
+            --text-color-dark: #333;
+            --main-bg-gradient: linear-gradient(135deg, #FFC080 0%, #a3e293 100%);
+            --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --card-hover-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+        }
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: var(--main-bg-gradient);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            color: var(--text-color-dark); /* Metin rengi genel olarak ayarlandı */
+        }
+        .main-container {
+            background-color: transparent; 
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 900px; /* Genişlik 900px olarak artırıldı */
+            width: 100%;
+            position: relative; /* İçerideki absolute butonlar için */
+        }
+
+        /* Geri Butonu Stilleri (Sabit) */
+        .back-button {
+            position: fixed; /* Buton ekranın sol üst köşesine sabitlendi */
+            top: 20px;
+            left: 20px;
+            width: 60px; /* Butonun boyutu diğer sayfalarla tutarlı hale getirildi */
+            height: 60px; /* Butonun boyutu diğer sayfalarla tutarlı hale getirildi */
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-decoration: none;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+            z-index: 1000; /* Diğer elemanların üzerinde görünmesini sağlar */
+        }
+        .back-button:hover {
+            transform: scale(1.1);
+        }
+        .back-button img {
+            width: 60px; /* Butonun boyutuna göre ayarlandı */
+            height: 60px; /* Butonun boyutuna göre ayarlandı */
+        }
+        
+        /* Başlık Stilleri */
+        .main-title {
+            font-family: 'Fredoka One', cursive;
+            font-size: 2.5rem;
+            color: var(--text-color-dark);
+            margin-bottom: 30px;
+        }
+
+        /* Oyun Kapsayıcısı */
+        .game-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            padding: 20px;
+            border-radius: 20px;
+        }
+
+        /* Senaryo Ekranı */
+        #scenario-display {
+            font-family: 'Fredoka One', cursive;
+            font-size: 2em;
+            color: #2C3E50;
+            text-align: center;
+            margin-bottom: 10px; /* Boşluk azaltıldı */
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.7);
+            border-radius: 15px;
+            box-shadow: var(--card-shadow);
+            width: 90%; /* Genişlik ayarlandı */
+            max-width: 700px; /* Genişlik artırıldı */
+        }
+
+        /* Seçenek Izgarası (Flexbox ile 4'lü Düzen) */
+        #options-grid {
+            display: flex; /* Grid yerine Flexbox kullanıldı */
+            flex-wrap: wrap; /* Kutuların sığmazsa alt satıra geçmesini sağlar */
+            justify-content: center; /* Kutuları ortalar */
+            gap: 20px; /* Kutular arası boşluk */
+            width: 100%;
+            max-width: 800px; /* Maksimum genişlik 800px olarak ayarlandı */
+            margin: 0 auto; /* Ortala */
+        }
+
+        /* Seçenek Kartı Stilleri */
+        .option-card {
+            background-color: var(--card-bg-color);
+            border-radius: 15px;
+            box-shadow: var(--card-shadow);
+            padding: 20px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            min-height: 150px; /* Kartların minimum yüksekliği */
+            font-family: 'Nunito', sans-serif;
+            font-size: 1.2em;
+            font-weight: 700;
+            color: var(--text-color-dark);
+            border: 3px solid transparent; /* Varsayılan şeffaf kenarlık */
+            box-sizing: border-box; /* Padding ve border genişliğe dahil */
+            flex: 1 1 calc(25% - 15px); /* Her satırda 4 kutu için genişlik ayarı (20px gap için 15px çıkarıldı) */
+            min-width: 150px; /* Kartların çok küçülmesini engeller */
+        }
+
+        .option-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--card-hover-shadow);
+        }
+
+        /* Doğru/Yanlış Cevap Geri Bildirimi */
+        .feedback-message {
+            font-family: 'Nunito', sans-serif;
+            font-size: 1.5em;
+            font-weight: 700;
+            margin-top: 20px;
+            min-height: 30px; /* Mesaj alanı için minimum yükseklik */
+        }
+
+        .feedback-message.correct {
+            color: #4CAF50; /* Yeşil */
+        }
+
+        .feedback-message.incorrect {
+            color: #FF6347; /* Kırmızı */
+        }
+
+        .option-card.correct {
+            border-color: #4CAF50;
+            box-shadow: 0 0 15px #4CAF50;
+        }
+
+        .option-card.incorrect {
+            border-color: #FF6347;
+            box-shadow: 0 0 15px #FF6347;
+            animation: shake 0.5s ease-in-out; /* Sallanma animasyonu */
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+
+        /* Sonraki Butonu */
+        #next-button {
+            padding: 15px 30px;
+            background-color: #2C3E50;
+            color: white;
+            font-family: 'Fredoka One', cursive;
+            font-size: 1.2em;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            margin-top: 30px;
+            display: none; /* Başlangıçta gizli */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        #next-button:hover {
+            background-color: #1a242f;
+            transform: translateY(-2px);
+        }
+
+        /* Responsive Ayarlar */
+        @media (max-width: 768px) {
+            .main-container {
+                padding: 15px;
+            }
+            .main-title {
+                font-size: 2rem;
+            }
+            #scenario-display {
+                font-size: 1.5em;
+                padding: 15px;
+            }
+            #options-grid {
+                max-width: 600px; /* Tabletlerde 2x2 düzeni için uygun max-width */
+            }
+            .option-card {
+                flex: 1 1 calc(50% - 10px); /* Tabletlerde 2x2 düzeni için */
+                min-height: 100px;
+                font-size: 1em;
+            }
+            .back-button {
+                width: 40px;
+                height: 40px;
+                top: 15px;
+                left: 15px;
+            }
+            .back-button img {
+                width: 40px;
+                height: 40px;
+            }
+            #next-button {
+                padding: 10px 20px;
+                font-size: 1em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            #options-grid {
+                max-width: 300px; /* Telefonlarda tek sütun için uygun max-width */
+            }
+            .option-card {
+                flex: 1 1 100%; /* Telefonlarda tek sütun */
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Geri butonu main-container dışına taşındı ve sabitlendi -->
+    <a href="#" onclick="window.history.back()" class="back-button">
+        <img src="assets/back_icon.png" alt="Geri Dön" class="back-icon">
+    </a>
+
+    <div class="main-container">
+        <h1 class="main-title">Selamlaşma ve Vedalaşma</h1>
+
+        <div class="game-container">
+            <div id="scenario-display" class="scenario-text"></div>
+            <div id="options-grid" class="options-grid"></div>
+            <div id="feedback-message" class="feedback-message"></div>
+            <button id="next-button" class="next-button" style="display:none;">Sonraki</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const scenarioDisplay = document.getElementById('scenario-display');
+            const optionsGrid = document.getElementById('options-grid');
+            const feedbackMessage = document.getElementById('feedback-message');
+            const nextButton = document.getElementById('next-button');
+
+            const scenarios = [
+                {
+                    scenario: "Sabah kahvaltısı için mutfağa girdin ve anneni gördün. Annene ne dersin?",
+                    options: [
+                        { text: "Günaydın anneciğim!", correct: true },
+                        { text: "İyi akşamlar!", correct: false },
+                        { text: "Nasılsın?", correct: false },
+                        { text: "Güle güle!", correct: false }
+                    ],
+                    feedback: {
+                        correct: "Harikasın! Sabahları 'Günaydın' diyerek güne neşe katarız.",
+                        incorrect: "Tekrar dene. Sabahları ne deriz?"
+                    }
+                },
+                {
+                    scenario: "Akşam yemeğinden sonra misafirleriniz eve gitmek için kapıdan çıkıyor. Misafirlere ne dersin?",
+                    options: [
+                        { text: "Merhaba!", correct: false },
+                        { text: "İyi geceler!", correct: false },
+                        { text: "Hoşça kalın, yine bekleriz!", correct: true },
+                        { text: "Nasılsınız?", correct: false }
+                    ],
+                    feedback: {
+                        correct: "Çok naziksin! Ayrılan kişilere 'Hoşça kalın' diyerek uğurlarız.",
+                        incorrect: "Düşün bakalım, birisi ayrılırken ne söyleriz?"
+                    }
+                },
+                {
+                    scenario: "Akşam yatmadan önce babana iyi geceler demek istiyorsun. Ona ne dersin?",
+                    options: [
+                        { text: "Günaydın!", correct: false },
+                        { text: "İyi geceler babacığım!", correct: true },
+                        { text: "Merhaba!", correct: false },
+                        { text: "Görüşürüz!", correct: false }
+                    ],
+                    feedback: {
+                        correct: "Doğru! Gece uyumadan önce 'İyi geceler' denir.",
+                        incorrect: "Bir daha dene. Gece yatağa giderken ne söyleriz?"
+                    }
+                },
+                {
+                    scenario: "Parkta oyun oynarken yeni bir çocukla tanıştın. Kendini nasıl tanıtırsın?",
+                    options: [
+                        { text: "Hoşça kal, ben gidiyorum.", correct: false },
+                        { text: "Merhaba, benim adım Zuzu. Senin adın ne?", correct: true },
+                        { text: "İyi akşamlar!", correct: false },
+                        { text: "Nasılsın?", correct: false }
+                    ],
+                    feedback: {
+                        correct: "Harika! Yeni biriyle tanışırken 'Merhaba' demeliyiz.",
+                        incorrect: "Yanlış cevap. Yeni bir arkadaşla tanışırken ilk ne söylemeliyiz?"
+                    }
+                },
+                {
+                    scenario: "Arkadaşınla buluşmaya gidiyorsun. Onu gördüğünde ilk ne söylersin?",
+                    options: [
+                        { text: "Merhaba!", correct: true },
+                        { text: "Güle güle!", correct: false },
+                        { text: "Hoşça kal!", correct: false },
+                        { text: "İyi akşamlar!", correct: false }
+                    ],
+                    feedback: {
+                        correct: "Evet! Arkadaşınla buluştuğunda 'Merhaba' demelisin.",
+                        incorrect: "Tekrar düşün. Bir araya geldiğinizde ne söylersiniz?"
+                    }
+                },
+                {
+                    scenario: "Günün sonunda okuldan eve dönüyorsun. Öğretmenine ne dersin?",
+                    options: [
+                        { text: "Günaydın öğretmenim!", correct: false },
+                        { text: "Hoşça kal öğretmenim!", correct: true },
+                        { text: "Merhaba!", correct: false },
+                        { text: "Nasılsınız?", correct: false }
+                    ],
+                    feedback: {
+                        correct: "Doğru! Okuldan ayrılırken öğretmenine 'Hoşça kal' demelisin.",
+                        incorrect: "Okuldan ayrılırken ne denir?"
+                    }
+                }
+            ];
+
+            let currentScenarioIndex = 0;
+
+            function shuffleArray(array) {
+                for (let i = array.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [array[i], array[j]] = [array[j], array[i]];
+                }
+            }
+
+            function loadScenario() {
+                if (currentScenarioIndex >= scenarios.length) {
+                    scenarioDisplay.textContent = "Tebrikler! Tüm senaryoları tamamladın.";
+                    optionsGrid.innerHTML = '';
+                    feedbackMessage.textContent = '';
+                    feedbackMessage.className = 'feedback-message'; // Sınıfları sıfırla
+                    nextButton.style.display = 'none';
+                    return;
+                }
+
+                const currentScenario = scenarios[currentScenarioIndex];
+                scenarioDisplay.textContent = currentScenario.scenario;
+                feedbackMessage.textContent = '';
+                feedbackMessage.className = 'feedback-message'; // Sınıfları sıfırla
+                nextButton.style.display = 'none';
+
+                optionsGrid.innerHTML = '';
+                const shuffledOptions = [...currentScenario.options];
+                shuffleArray(shuffledOptions);
+
+                shuffledOptions.forEach(option => {
+                    const card = document.createElement('div');
+                    card.className = 'option-card';
+                    card.dataset.correct = option.correct;
+
+                    const text = document.createElement('p');
+                    text.className = 'option-text';
+                    text.textContent = option.text;
+
+                    card.appendChild(text);
+                    optionsGrid.appendChild(card);
+
+                    card.addEventListener('click', handleOptionClick);
+                    card.style.pointerEvents = 'auto'; // Seçenekleri tekrar tıklanabilir yap
+                });
+            }
+
+            function handleOptionClick(event) {
+                const clickedCard = event.currentTarget;
+                const isCorrect = clickedCard.dataset.correct === 'true';
+                const currentScenario = scenarios[currentScenarioIndex];
+
+                // Geri bildirim mesajından ve tüm kartlardan önceki geri bildirim sınıflarını kaldır
+                feedbackMessage.classList.remove('correct', 'incorrect'); // Burası eklendi
+                Array.from(optionsGrid.children).forEach(card => {
+                    card.classList.remove('correct', 'incorrect');
+                    card.classList.remove('shake-animation'); // Animasyon sınıfını da kaldır
+                });
+
+                // Yanlış cevabı hemen işler
+                if (!isCorrect) {
+                    feedbackMessage.textContent = currentScenario.feedback.incorrect;
+                    feedbackMessage.classList.add('incorrect');
+                    clickedCard.classList.add('incorrect');
+                    
+                    // Yanlış cevap için sallanma animasyonu ekle
+                    clickedCard.classList.add('shake-animation');
+                    clickedCard.addEventListener('animationend', () => {
+                        clickedCard.classList.remove('shake-animation');
+                    }, { once: true });
+
+                    // Yanlış cevapta devam etmez
+                    return; 
+                }
+
+                // Doğru cevap verildiğinde
+                feedbackMessage.textContent = currentScenario.feedback.correct;
+                feedbackMessage.classList.add('correct');
+                clickedCard.classList.add('correct');
+
+                // Doğru cevaptan sonra tüm seçenekleri pasif hale getirir
+                Array.from(optionsGrid.children).forEach(card => {
+                    card.removeEventListener('click', handleOptionClick);
+                    card.style.pointerEvents = 'none'; // Tıklamayı devre dışı bırak
+                });
+
+                // "Sonraki" butonunu gösterir
+                nextButton.style.display = 'block';
+            }
+
+            // "Sonraki" butonuna tıklama olayını dinler
+            nextButton.addEventListener('click', () => {
+                currentScenarioIndex++;
+                loadScenario();
+            });
+
+            // Oyunu başlat
+            loadScenario();
+        });
+    </script>
+</body>
+</html>
